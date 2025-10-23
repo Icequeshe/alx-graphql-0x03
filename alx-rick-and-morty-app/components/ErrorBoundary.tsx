@@ -1,4 +1,5 @@
 import React, { ReactNode } from "react";
+import * as Sentry from "@sentry/react";
 
 interface State {
   hasError: boolean;
@@ -19,7 +20,11 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps, State> {
   }
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+    // ✅ Log to console for local debugging
     console.log({ error, errorInfo });
+
+    // ✅ Send error details to Sentry
+    Sentry.captureException(error, { extra: errorInfo });
   }
 
   render() {
@@ -44,3 +49,4 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps, State> {
 }
 
 export default ErrorBoundary;
+
