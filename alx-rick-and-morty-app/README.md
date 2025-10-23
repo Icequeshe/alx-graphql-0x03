@@ -1,40 +1,140 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).
+# 🚀 ErrorBoundary Component
 
-## Getting Started
+## 📘 Objective
+Implement an **ErrorBoundary** class component in TypeScript to catch and handle JavaScript errors within the React (Next.js) application.
 
-First, run the development server:
+---
 
-```bash
+## 🧩 Project Setup
+
+1. **Duplicate the previous project:**
+   ```bash
+   cp -r alx-graphql-0x02 alx-graphql-0x03
+   cd alx-graphql-0x03/alx-rick-and-morty-app
+# 🚀 ErrorBoundary Component
+
+## 📘 Objective
+Implement an **ErrorBoundary** class component in TypeScript to catch and handle JavaScript errors within the React (Next.js) application.
+
+---
+
+## 🧩 Project Setup
+
+1. **Duplicate the previous project:**
+   ```bash
+   cp -r alx-graphql-0x02 alx-graphql-0x03
+   cd alx-graphql-0x03/alx-rick-and-morty-app
+Create the component file:
+
+mkdir -p components
+touch components/ErrorBoundary.tsx
+
+💻 Implementation
+File: components/ErrorBoundary.tsx
+import React, { ReactNode } from "react";
+
+interface State {
+  hasError: boolean;
+}
+
+interface ErrorBoundaryProps {
+  children: ReactNode;
+}
+
+class ErrorBoundary extends React.Component<ErrorBoundaryProps, State> {
+  constructor(props: ErrorBoundaryProps) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError(error: Error): State {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+    console.log({ error, errorInfo });
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="flex flex-col items-center justify-center min-h-screen text-center">
+          <h2 className="text-2xl font-bold text-red-600 mb-4">
+            Oops, there is an error!
+          </h2>
+          <button
+            className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+            onClick={() => this.setState({ hasError: false })}
+          >
+            Try again?
+          </button>
+        </div>
+      );
+    }
+
+    return this.props.children;
+  }
+}
+
+export default ErrorBoundary;
+
+🧠 Integration (Next.js)
+
+In a Next.js app, you can wrap all pages in the ErrorBoundary using the _app.tsx file.
+
+File: pages/_app.tsx
+import type { AppProps } from "next/app";
+import ErrorBoundary from "../components/ErrorBoundary";
+
+function MyApp({ Component, pageProps }: AppProps) {
+  return (
+    <ErrorBoundary>
+      <Component {...pageProps} />
+    </ErrorBoundary>
+  );
+}
+
+export default MyApp;
+
+
+✅ This ensures that any runtime error in your pages or components is caught and displayed by the ErrorBoundary.
+
+🧪 Testing the ErrorBoundary
+
+To test if it works, throw an error in one of your page components:
+
+Example: pages/index.tsx
+export default function Home() {
+  throw new Error("Test error from Home page");
+
+  return <div>Welcome to the Rick and Morty App!</div>;
+}
+
+
+When you visit the page, you should see:
+
+“Oops, there is an error!”
+and a Try again? button.
+
+🧰 Commands
+
+Run the development server:
+
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+Then open your app at:
 
-[API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+http://localhost:3000
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) instead of React pages.
-
-This project uses [`next/font`](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn-pages-router) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/pages/building-your-application/deploying) for more details.
+📁 Repository Structure
+alx-graphql-0x03/
+└── alx-rick-and-morty-app/
+    ├── components/
+    │   └── ErrorBoundary.tsx
+    ├── pages/
+    │   ├── _app.tsx
+    │   └── index.tsx
+    ├── package.json
+    ├── README.md
+    └── ...
